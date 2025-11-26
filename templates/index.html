@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Dashboard</title>
+</head>
+<body>
+    <h1>System Dashboard</h1>
+
+    <h2>Live Data from Adafruit IO</h2>
+    <p>Temperature: {{ live_temp }}</p>
+    <p>Humidity: {{ live_humid }}</p>
+
+    <h2>Historical Data from Database</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Feed</th>
+                <th>Value</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in historical_data %}
+            <tr>
+                <td>{{ data.feed_name }}</td>
+                <td>{{ data.value }}</td>
+                <td>{{ data.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
