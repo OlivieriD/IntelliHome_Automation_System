@@ -45,8 +45,8 @@ def get_live_data(feed_name):
 @app.route('/')
 def index():
     # Fetch live data from Adafruit IO
-    live_temp = get_live_data('temperature')
-    live_humid = get_live_data('humidity')
+    live_temp = get_live_data('temperature-feed')
+    live_humid = get_live_data('humidity-feed')
 
     # Fetch historical data from Postgres DB (e.g., last 10 entries)
     historical_data = SensorData.query.order_by(SensorData.timestamp.desc()).limit(10).all()
