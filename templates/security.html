@@ -49,6 +49,11 @@
 <script>
     document.getElementById('securityDate').valueAsDate = new Date();
 
+    function convertUTCToLocal(utcDateString) {
+        const utcDate = new Date(utcDateString);
+        return utcDate;
+    }
+
     function setMode(mode) {
         fetch('/api/security/mode', {
             method: 'POST',
@@ -92,7 +97,7 @@
         fetch('/api/security/data', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({date: date})
+            body: JSON. stringify({date: date})
         })
         .then(response => response.json())
         .then(data => {
@@ -117,12 +122,23 @@
             return;
         }
 
-        let html = '<table><thead><tr><th>Timestamp</th><th>Motion</th><th>Smoke</th><th>Sound</th><th>Total Events</th></tr></thead><tbody>';
+        let html = '<table><thead><tr><th>Time (Local)</th><th>Motion</th><th>Smoke</th><th>Sound</th><th>Total Events</th></tr></thead><tbody>';
 
         intrusions.forEach(intrusion => {
+            const localDate = convertUTCToLocal(intrusion. timestamp);
+            const timeString = localDate.toLocaleString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+
             const total = intrusion.motion_count + intrusion.smoke_count + intrusion.sound_count;
             html += `<tr>
-                <td>${intrusion.timestamp}</td>
+                <td>${timeString}</td>
                 <td>${intrusion.motion_count}</td>
                 <td>${intrusion. smoke_count}</td>
                 <td>${intrusion.sound_count}</td>

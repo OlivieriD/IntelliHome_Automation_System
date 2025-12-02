@@ -4,7 +4,6 @@ from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from Adafruit_IO import Client, errors
 from datetime import datetime, timedelta
-import pytz
 
 load_dotenv()
 
@@ -119,8 +118,8 @@ def get_environmental_data():
 
     try:
         date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
-        start_date = pytz.utc.localize(date_obj.replace(hour=0, minute=0, second=0))
-        end_date = pytz.utc.localize(date_obj.replace(hour=23, minute=59, second=59))
+        start_date = date_obj.replace(hour=0, minute=0, second=0)
+        end_date = date_obj.replace(hour=23, minute=59, second=59)
 
         records = EnvData.query.filter(
             EnvData.timestamp >= start_date,
@@ -147,7 +146,6 @@ def get_environmental_data():
         app.logger.error(f"Error fetching environmental data: {e}")
         return jsonify({'error': str(e)}), 500
 
-
 @app.route('/api/security/data', methods=['POST'])
 def get_security_data():
     data = request.get_json()
@@ -155,8 +153,8 @@ def get_security_data():
 
     try:
         date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
-        start_date = pytz.utc.localize(date_obj.replace(hour=0, minute=0, second=0))
-        end_date = pytz.utc.localize(date_obj.replace(hour=23, minute=59, second=59))
+        start_date = date_obj.replace(hour=0, minute=0, second=0)
+        end_date = date_obj.replace(hour=23, minute=59, second=59)
 
         records = SecurityData.query.filter(
             SecurityData.timestamp >= start_date,

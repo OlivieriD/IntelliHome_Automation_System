@@ -41,9 +41,12 @@
 
 {% block extra_js %}
 <script>
-    let chart = null;
+    document.getElementById('dateSelect').value = '{{ today }}';
 
-    document.getElementById('dateSelect').valueAsDate = new Date();
+    function convertUTCToLocal(utcDateString) {
+        const utcDate = new Date(utcDateString);
+        return utcDate;
+    }
 
     function loadData() {
         const date = document.getElementById('dateSelect'). value;
@@ -60,7 +63,7 @@
             body: JSON. stringify({date: date, sensor: sensor})
         })
         .then(response => response.json())
-        .then(data => {
+        . then(data => {
             if (data.error) {
                 alert('Error: ' + data.error);
                 return;
@@ -76,10 +79,10 @@
     }
 
     function updateChart(data) {
-        const ctx = document. getElementById('envChart').getContext('2d');
+        const ctx = document.getElementById('envChart').getContext('2d');
 
-        if (chart) {
-            chart. destroy();
+        if (window.chartInstance) {
+            window.chartInstance.destroy();
         }
 
         const sensorLabels = {
@@ -94,10 +97,19 @@
             pressure: 'rgb(75, 192, 192)'
         };
 
-        chart = new Chart(ctx, {
+        const localTimestamps = data.timestamps.map(t => {
+            const localDate = convertUTCToLocal(t);
+            return localDate.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        });
+
+        window.chartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.timestamps. map(t => new Date(t).toLocaleTimeString()),
+                labels: localTimestamps,
                 datasets: [{
                     label: sensorLabels[data.sensor],
                     data: data.values,
@@ -114,6 +126,14 @@
                     legend: {
                         position: 'top'
                     }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (Local)'
+                        }
+                    }
                 }
             }
         });
@@ -123,7 +143,7 @@
         const container = document.getElementById('dataTableContainer');
 
         if (data.values.length === 0) {
-            container. innerHTML = '<p style="color: #666;">No data found for the selected date. </p>';
+            container.innerHTML = '<p style="color: #666;">No data found for the selected date. </p>';
             return;
         }
 
@@ -133,11 +153,20 @@
             pressure: 'Pressure (hPa)'
         };
 
-        let html = '<table><thead><tr><th>Time</th><th>' + sensorLabels[data.sensor] + '</th></tr></thead><tbody>';
+        let html = '<table><thead><tr><th>Time (Local)</th><th>' + sensorLabels[data. sensor] + '</th></tr></thead><tbody>';
 
         for (let i = 0; i < data.timestamps.length; i++) {
-            const time = new Date(data.timestamps[i]).toLocaleString();
-            html += `<tr><td>${time}</td><td>${data.values[i]}</td></tr>`;
+            const localDate = convertUTCToLocal(data.timestamps[i]);
+            const timeString = localDate.toLocaleString('en-US', {
+                month: 'numeric',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            html += `<tr><td>${timeString}</td><td>${data.values[i]}</td></tr>`;
         }
 
         html += '</tbody></table>';
