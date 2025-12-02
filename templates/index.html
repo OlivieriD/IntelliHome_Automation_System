@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DomiSafe Dashboard</title>
-    <script src="https://cdn.jsdelivr. net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -91,7 +91,7 @@
             color: white;
         }
 
-        . control-button:hover {
+        .control-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
@@ -102,7 +102,7 @@
             margin-top: 15px;
         }
 
-        .mode-button {
+        . mode-button {
             flex: 1;
             padding: 15px;
             border: none;
@@ -115,7 +115,7 @@
             color: #333;
         }
 
-        .mode-button. active {
+        .mode-button.active {
             background: #667eea;
             color: white;
         }
@@ -134,6 +134,7 @@
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .camera-button:hover {
@@ -141,7 +142,7 @@
             transform: translateY(-2px);
         }
 
-        . chart-container {
+        .chart-container {
             background: white;
             border-radius: 15px;
             padding: 25px;
@@ -167,7 +168,7 @@
             margin-right: 8px;
         }
 
-        .status-indicator.on {
+        .status-indicator. on {
             background: #48bb78;
         }
 
@@ -314,12 +315,12 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON. stringify({command: command})
             })
-            .then(response => response.json())
+            .then(response => response. json())
             .then(data => {
-                if (data.success) {
-                    button.classList.toggle('on');
+                if (data. success) {
+                    button. classList.toggle('on');
                     button.classList.toggle('off');
-                    button.innerHTML = `<span class="status-indicator ${command. toLowerCase()}"></span>${command}`;
+                    button. innerHTML = `<span class="status-indicator ${command. toLowerCase()}"></span>${command}`;
                 }
             });
         }
@@ -331,9 +332,9 @@
                 body: JSON.stringify({mode: mode})
             })
             .then(response => response.json())
-            . then(data => {
+            .then(data => {
                 if (data.success) {
-                    document.querySelectorAll('.mode-button'). forEach(btn => btn.classList. remove('active'));
+                    document.querySelectorAll('.mode-button').forEach(btn => btn. classList.remove('active'));
                     button.classList.add('active');
                 }
             });
@@ -347,7 +348,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Camera triggered!  Check your email for the photo.');
+                    alert('Camera triggered! Check your email for the photo.');
                 }
             });
         }
@@ -365,28 +366,40 @@
                                 label: 'Temperature (°C)',
                                 data: data.temperature,
                                 borderColor: 'rgb(255, 99, 132)',
-                                tension: 0.1
+                                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                                tension: 0.4,
+                                fill: true
                             },
                             {
                                 label: 'Humidity (%)',
-                                data: data. humidity,
+                                data: data.humidity,
                                 borderColor: 'rgb(54, 162, 235)',
-                                tension: 0.1
+                                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                                tension: 0.4,
+                                fill: true
                             },
                             {
                                 label: 'Pressure (hPa)',
                                 data: data.pressure,
                                 borderColor: 'rgb(75, 192, 192)',
-                                tension: 0.1
+                                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                                tension: 0.4,
+                                fill: true
                             }
                         ]
                     },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: true
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        }
                     }
                 });
-            });
+            })
+            .catch(error => console.error('Error loading chart:', error));
 
         setInterval(() => location.reload(), 60000);
     </script>

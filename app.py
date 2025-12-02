@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os. getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -22,7 +22,7 @@ aio = Client(AIO_USERNAME, AIO_KEY)
 
 class EnvData(db.Model):
     __tablename__ = 'env_data'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db. Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     temperature = db.Column(db.Float, nullable=False)
     humidity = db.Column(db.Float, nullable=False)
@@ -32,8 +32,12 @@ class EnvData(db.Model):
 def get_live_data(feed_name):
     try:
         data = aio.receive(feed_name)
-        return data.value
+        return data. value
+    except errors.RequestError:
+        return 'N/A'
     except errors.AdafruitIOError:
+        return 'N/A'
+    except Exception:
         return 'N/A'
 
 
@@ -70,7 +74,7 @@ def index():
                            recent_env=recent_env)
 
 
-@app.route('/api/control/<device>', methods=['POST'])
+@app. route('/api/control/<device>', methods=['POST'])
 def control_device(device):
     data = request.get_json()
     command = data.get('command')
@@ -114,7 +118,7 @@ def chart_environmental():
     data = EnvData.query.filter(EnvData.timestamp >= cutoff).order_by(EnvData.timestamp.asc()).all()
 
     return jsonify({
-        'timestamps': [d.timestamp.isoformat() for d in data],
+        'timestamps': [d.timestamp. isoformat() for d in data],
         'temperature': [d.temperature for d in data],
         'humidity': [d.humidity for d in data],
         'pressure': [d.pressure for d in data]
