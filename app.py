@@ -63,7 +63,7 @@ def index():
 
     recent_env = EnvData.query.order_by(EnvData.timestamp.desc()).limit(10).all()
 
-    return render_template('index. html',
+    return render_template('index.html',
                            live_temp=live_temp,
                            live_humid=live_humid,
                            live_pressure=live_pressure,
