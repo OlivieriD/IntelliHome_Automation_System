@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Device Control - DomiSafe{% endblock %}
+
+{% block extra_css %}
+<style>
+    .control-button {
+        width: 100%;
+        padding: 20px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+    .control-button. on {
+        background: #48bb78;
+        color: white;
+    }
+
+    .control-button.off {
+        background: #f56565;
+        color: white;
+    }
+
+    .control-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .status-indicator {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .status-indicator.on {
+        background: #68d391;
+    }
+
+    .status-indicator.off {
+        background: #fc8181;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🎛️ Device Control</h1>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>💡 Light Control</h2>
+        <p style="color: #666; margin-bottom: 15px;">Control the main lighting system</p>
+        <button class="control-button {{ 'on' if light_status == '1' or light_status == 'ON' else 'off' }}"
+                onclick="toggleDevice('light', this)">
+            <span class="status-indicator {{ 'on' if light_status == '1' or light_status == 'ON' else 'off' }}"></span>
+            {{ 'ON' if light_status == '1' or light_status == 'ON' else 'OFF' }}
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>🌀 Fan Control</h2>
+        <p style="color: #666; margin-bottom: 15px;">Control the ventilation fan</p>
+        <button class="control-button {{ 'on' if fan_status == '1' or fan_status == 'ON' else 'off' }}"
+                onclick="toggleDevice('fan', this)">
+            <span class="status-indicator {{ 'on' if fan_status == '1' or fan_status == 'ON' else 'off' }}"></span>
+            {{ 'ON' if fan_status == '1' or fan_status == 'ON' else 'OFF' }}
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>🔔 Buzzer Control</h2>
+        <p style="color: #666; margin-bottom: 15px;">Control the alert buzzer</p>
+        <button class="control-button {{ 'on' if buzzer_status == '1' or buzzer_status == 'ON' else 'off' }}"
+                onclick="toggleDevice('buzzer', this)">
+            <span class="status-indicator {{ 'on' if buzzer_status == '1' or buzzer_status == 'ON' else 'off' }}"></span>
+            {{ 'ON' if buzzer_status == '1' or buzzer_status == 'ON' else 'OFF' }}
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>ℹ️ Device Information</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Device</th>
+                <th>Status</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>💡 Light</strong></td>
+                <td><span class="status-indicator {{ 'on' if light_status == '1' or light_status == 'ON' else 'off' }}"></span>{{ 'ON' if light_status == '1' or light_status == 'ON' else 'OFF' }}</td>
+                <td>Main room lighting connected to GPIO 21</td>
+            </tr>
+            <tr>
+                <td><strong>🌀 Fan</strong></td>
+                <td><span class="status-indicator {{ 'on' if fan_status == '1' or fan_status == 'ON' else 'off' }}"></span>{{ 'ON' if fan_status == '1' or fan_status == 'ON' else 'OFF' }}</td>
+                <td>Ventilation fan connected to GPIO 20</td>
+            </tr>
+            <tr>
+                <td><strong>🔔 Buzzer</strong></td>
+                <td><span class="status-indicator {{ 'on' if buzzer_status == '1' or buzzer_status == 'ON' else 'off' }}"></span>{{ 'ON' if buzzer_status == '1' or buzzer_status == 'ON' else 'OFF' }}</td>
+                <td>Alert buzzer connected to GPIO 18</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleDevice(device, button) {
+        const isOn = button.classList.contains('on');
+        const command = isOn ? 'OFF' : 'ON';
+
+        fetch(`/api/control/${device}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({command: command})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button. classList.toggle('on');
+                button.classList.toggle('off');
+                button.innerHTML = `<span class="status-indicator ${command. toLowerCase()}"></span>${command}`;
+                location.reload();
+            } else {
+                alert('Failed to control device');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to control device');
+        });
+    }
+</script>
+{% endblock %}

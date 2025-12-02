@@ -1,0 +1,147 @@
+{% extends "base. html" %}
+
+{% block title %}Environmental Data - DomiSafe{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🌡️ Environmental Data</h1>
+
+<div class="card">
+    <h2>📅 Select Date and Sensor</h2>
+    <div class="dashboard-grid">
+        <div class="form-group">
+            <label for="dateSelect">Select Date:</label>
+            <input type="date" id="dateSelect" class="form-control" value="{{ today }}">
+        </div>
+
+        <div class="form-group">
+            <label for="sensorSelect">Select Sensor:</label>
+            <select id="sensorSelect" class="form-control">
+                <option value="temperature">Temperature (°C)</option>
+                <option value="humidity">Humidity (%)</option>
+                <option value="pressure">Pressure (hPa)</option>
+            </select>
+        </div>
+    </div>
+
+    <button onclick="loadData()" class="btn btn-primary">Load Data</button>
+</div>
+
+<div class="card">
+    <h2>📊 Data Visualization</h2>
+    <canvas id="envChart"></canvas>
+</div>
+
+<div class="card">
+    <h2>📋 Data Table</h2>
+    <div id="dataTableContainer">
+        <p style="color: #666;">Select a date and sensor, then click "Load Data" to view results.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let chart = null;
+
+    document.getElementById('dateSelect').valueAsDate = new Date();
+
+    function loadData() {
+        const date = document.getElementById('dateSelect'). value;
+        const sensor = document.getElementById('sensorSelect').value;
+
+        if (!date) {
+            alert('Please select a date');
+            return;
+        }
+
+        fetch('/api/environmental/data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON. stringify({date: date, sensor: sensor})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+                return;
+            }
+
+            updateChart(data);
+            updateTable(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to load data');
+        });
+    }
+
+    function updateChart(data) {
+        const ctx = document. getElementById('envChart').getContext('2d');
+
+        if (chart) {
+            chart. destroy();
+        }
+
+        const sensorLabels = {
+            temperature: 'Temperature (°C)',
+            humidity: 'Humidity (%)',
+            pressure: 'Pressure (hPa)'
+        };
+
+        const colors = {
+            temperature: 'rgb(255, 99, 132)',
+            humidity: 'rgb(54, 162, 235)',
+            pressure: 'rgb(75, 192, 192)'
+        };
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.timestamps. map(t => new Date(t).toLocaleTimeString()),
+                datasets: [{
+                    label: sensorLabels[data.sensor],
+                    data: data.values,
+                    borderColor: colors[data.sensor],
+                    backgroundColor: colors[data.sensor]. replace('rgb', 'rgba'). replace(')', ', 0.1)'),
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    }
+
+    function updateTable(data) {
+        const container = document.getElementById('dataTableContainer');
+
+        if (data.values.length === 0) {
+            container. innerHTML = '<p style="color: #666;">No data found for the selected date. </p>';
+            return;
+        }
+
+        const sensorLabels = {
+            temperature: 'Temperature (°C)',
+            humidity: 'Humidity (%)',
+            pressure: 'Pressure (hPa)'
+        };
+
+        let html = '<table><thead><tr><th>Time</th><th>' + sensorLabels[data.sensor] + '</th></tr></thead><tbody>';
+
+        for (let i = 0; i < data.timestamps.length; i++) {
+            const time = new Date(data.timestamps[i]).toLocaleString();
+            html += `<tr><td>${time}</td><td>${data.values[i]}</td></tr>`;
+        }
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+</script>
+{% endblock %}

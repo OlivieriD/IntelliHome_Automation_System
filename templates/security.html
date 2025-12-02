@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Security - DomiSafe{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🔒 Manage Security</h1>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>🏡 System Mode</h2>
+        <p style="color: #666; margin-bottom: 20px;">Current Mode: <strong style="color: #667eea; font-size: 1.2rem;">{{ system_mode if system_mode != 'N/A' else 'Unknown' }}</strong></p>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="setMode('Home')" class="btn btn-success" style="flex: 1;">🏠 Home Mode</button>
+            <button onclick="setMode('Away')" class="btn btn-danger" style="flex: 1;">🚨 Away Mode</button>
+        </div>
+        <p style="color: #888; margin-top: 15px; font-size: 0.9rem;">
+            <strong>Home Mode:</strong> Security monitoring disabled<br>
+            <strong>Away Mode:</strong> Full security monitoring enabled
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>📸 Camera Control</h2>
+        <p style="color: #666; margin-bottom: 20px;">Manually trigger camera capture</p>
+        <button onclick="triggerCamera()" class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem;">
+            📸 Take Photo Now
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>📅 View Intrusion History</h2>
+    <div class="form-group">
+        <label for="securityDate">Select Date:</label>
+        <input type="date" id="securityDate" class="form-control">
+    </div>
+    <button onclick="loadIntrusions()" class="btn btn-primary">Load Intrusions</button>
+</div>
+
+<div class="card">
+    <h2>🚨 Intrusion Events</h2>
+    <div id="intrusionTableContainer">
+        <p style="color: #666;">Select a date and click "Load Intrusions" to view security events.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('securityDate').valueAsDate = new Date();
+
+    function setMode(mode) {
+        fetch('/api/security/mode', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({mode: mode})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`System mode changed to: ${mode}`);
+                location.reload();
+            } else {
+                alert('Failed to change mode');
+            }
+        });
+    }
+
+    function triggerCamera() {
+        fetch('/api/camera/trigger', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Camera triggered!  Check your email for the photo.');
+            } else {
+                alert('Failed to trigger camera');
+            }
+        });
+    }
+
+    function loadIntrusions() {
+        const date = document.getElementById('securityDate').value;
+
+        if (!date) {
+            alert('Please select a date');
+            return;
+        }
+
+        fetch('/api/security/data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({date: date})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+                return;
+            }
+
+            updateIntrusionTable(data. intrusions);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to load intrusion data');
+        });
+    }
+
+    function updateIntrusionTable(intrusions) {
+        const container = document.getElementById('intrusionTableContainer');
+
+        if (intrusions.length === 0) {
+            container. innerHTML = '<p style="color: #48bb78; font-weight: bold;">✅ No intrusions detected on this date.</p>';
+            return;
+        }
+
+        let html = '<table><thead><tr><th>Timestamp</th><th>Motion</th><th>Smoke</th><th>Sound</th><th>Total Events</th></tr></thead><tbody>';
+
+        intrusions.forEach(intrusion => {
+            const total = intrusion.motion_count + intrusion.smoke_count + intrusion.sound_count;
+            html += `<tr>
+                <td>${intrusion.timestamp}</td>
+                <td>${intrusion.motion_count}</td>
+                <td>${intrusion. smoke_count}</td>
+                <td>${intrusion.sound_count}</td>
+                <td><strong>${total}</strong></td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container. innerHTML = html;
+    }
+</script>
+{% endblock %}

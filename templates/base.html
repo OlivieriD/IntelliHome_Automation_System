@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - DomiSafe{% endblock %}
+
+{% block content %}
+<h1 class="page-title">🏠 System Dashboard</h1>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>🌡️ Temperature</h2>
+        <div class="sensor-value">{{ live_temp }}°C</div>
+        <div class="sensor-label">Current Reading</div>
+    </div>
+
+    <div class="card">
+        <h2>💧 Humidity</h2>
+        <div class="sensor-value">{{ live_humid }}%</div>
+        <div class="sensor-label">Current Reading</div>
+    </div>
+
+    <div class="card">
+        <h2>🌀 Pressure</h2>
+        <div class="sensor-value">{{ live_pressure }} hPa</div>
+        <div class="sensor-label">Current Reading</div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>🔒 Security Status</h2>
+        <div class="sensor-value">{{ system_mode if system_mode != 'N/A' else 'Unknown' }}</div>
+        <div class="sensor-label">System Mode</div>
+    </div>
+
+    <div class="card">
+        <h2>📊 Database Status</h2>
+        <div class="sensor-label">Environmental Records</div>
+        <div class="sensor-value" style="font-size: 2rem;">{{ latest_env.id if latest_env else 0 }}</div>
+        {% if latest_env %}
+        <p style="color: #666; margin-top: 10px;">Last update: {{ latest_env.timestamp. strftime('%Y-%m-%d %H:%M') }}</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>🚨 Security Events</h2>
+        <div class="sensor-label">Total Events</div>
+        <div class="sensor-value" style="font-size: 2rem;">{{ latest_security.id if latest_security else 0 }}</div>
+        {% if latest_security %}
+        <p style="color: #666; margin-top: 10px;">Last event: {{ latest_security.timestamp. strftime('%Y-%m-%d %H:%M') }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>🎯 Quick Actions</h2>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+        <a href="/environmental" class="btn btn-primary">View Environmental Data</a>
+        <a href="/security" class="btn btn-primary">Manage Security</a>
+        <a href="/control" class="btn btn-primary">Control Devices</a>
+    </div>
+</div>
+{% endblock %}

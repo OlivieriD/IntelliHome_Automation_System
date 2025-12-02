@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}About - DomiSafe{% endblock %}
+
+{% block content %}
+<h1 class="page-title">ℹ️ About DomiSafe</h1>
+
+<div class="card">
+    <h2>System Overview</h2>
+    <p style="line-height: 1.8; color: #555; font-size: 1.1rem;">
+        DomiSafe is a comprehensive IoT home automation and security system designed to provide
+        real-time monitoring and control of your smart home environment. The system integrates
+        environmental sensors, security monitoring, and device control capabilities into a unified dashboard.
+    </p>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card">
+        <h2>🌡️ Environmental Monitoring</h2>
+        <p style="color: #666; line-height: 1.6;">
+            Track temperature, humidity, and atmospheric pressure in real-time. Historical data
+            is stored in a cloud database for analysis and visualization.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>🔒 Security System</h2>
+        <p style="color: #666; line-height: 1.6;">
+            Monitor motion detection, smoke alerts, and sound events. Switch between Home and Away
+            modes for customized security behavior.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>🎛️ Device Control</h2>
+        <p style="color: #666; line-height: 1.6;">
+            Remotely control connected devices including lights, fans, and buzzers through
+            an intuitive web interface.
+        </p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🔧 Technical Stack</h2>
+    <ul style="line-height: 2; color: #555; font-size: 1.05rem;">
+        <li><strong>Backend:</strong> Flask (Python)</li>
+        <li><strong>Database:</strong> PostgreSQL (Neon)</li>
+        <li><strong>IoT Platform:</strong> Adafruit IO (MQTT)</li>
+        <li><strong>Hardware:</strong> Raspberry Pi with DHT11 sensor, PIR motion sensor</li>
+        <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript, Chart.js</li>
+        <li><strong>Deployment:</strong> Render (Cloud Platform)</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>👨‍💻 Developer Information</h2>
+    <p style="color: #666; line-height: 1.6;">
+        <strong>Project:</strong> DomiSafe IoT Home Automation System<br>
+        <strong>Course:</strong> IoT & Smart Systems<br>
+        <strong>Institution:</strong> Champlain College<br>
+        <strong>Year:</strong> 2025
+    </p>
+</div>
+{% endblock %}
