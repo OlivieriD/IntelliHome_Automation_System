@@ -88,7 +88,8 @@ def about():
 
 @app.route('/environmental')
 def environmental():
-    return render_template('environmental.html')
+    today = datetime.now().strftime('%Y-%m-%d')
+    return render_template('environmental.html', today=today)
 
 
 @app.route('/security')
