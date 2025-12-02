@@ -4,6 +4,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from Adafruit_IO import Client, errors
 from datetime import datetime, timedelta
+import pytz
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ aio = Client(AIO_USERNAME, AIO_KEY)
 class EnvData(db.Model):
     __tablename__ = 'env_data'
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
     temperature = db.Column(db.Float, nullable=False)
     humidity = db.Column(db.Float, nullable=False)
     pressure = db.Column(db.Float, nullable=False)
@@ -32,7 +33,7 @@ class EnvData(db.Model):
 class SecurityData(db.Model):
     __tablename__ = 'security_data'
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
     motion_count = db.Column(db.Integer, default=0)
     smoke_count = db.Column(db.Integer, default=0)
     sound_count = db.Column(db.Integer, default=0)
@@ -104,7 +105,7 @@ def control():
     fan_status = get_live_data('fan-control')
     buzzer_status = get_live_data('buzzer-control')
 
-    return render_template('control.html',
+    return render_template('control. html',
                            light_status=light_status,
                            fan_status=fan_status,
                            buzzer_status=buzzer_status)
@@ -118,8 +119,8 @@ def get_environmental_data():
 
     try:
         date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
-        start_date = date_obj.replace(hour=0, minute=0, second=0)
-        end_date = date_obj.replace(hour=23, minute=59, second=59)
+        start_date = pytz.utc.localize(date_obj.replace(hour=0, minute=0, second=0))
+        end_date = pytz.utc.localize(date_obj.replace(hour=23, minute=59, second=59))
 
         records = EnvData.query.filter(
             EnvData.timestamp >= start_date,
@@ -143,6 +144,7 @@ def get_environmental_data():
             'sensor': sensor
         })
     except Exception as e:
+        app.logger.error(f"Error fetching environmental data: {e}")
         return jsonify({'error': str(e)}), 500
 
 
@@ -153,8 +155,8 @@ def get_security_data():
 
     try:
         date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
-        start_date = date_obj.replace(hour=0, minute=0, second=0)
-        end_date = date_obj.replace(hour=23, minute=59, second=59)
+        start_date = pytz.utc.localize(date_obj.replace(hour=0, minute=0, second=0))
+        end_date = pytz.utc.localize(date_obj.replace(hour=23, minute=59, second=59))
 
         records = SecurityData.query.filter(
             SecurityData.timestamp >= start_date,
@@ -173,6 +175,7 @@ def get_security_data():
 
         return jsonify({'intrusions': intrusions})
     except Exception as e:
+        app.logger.error(f"Error fetching security data: {e}")
         return jsonify({'error': str(e)}), 500
 
 
