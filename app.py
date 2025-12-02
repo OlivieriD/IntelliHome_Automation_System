@@ -67,10 +67,19 @@ def index():
 
     system_mode = get_live_data('system-mode')
 
-    latest_env = EnvData.query.order_by(EnvData.timestamp.desc()).first()
-    latest_security = SecurityData.query.order_by(SecurityData.timestamp.desc()).first()
+    try:
+        latest_env = EnvData.query.order_by(EnvData.timestamp.desc()).first()
+    except Exception as e:
+        app.logger.error(f"Error querying env_data: {e}")
+        latest_env = None
 
-    return render_template('index. html',
+    try:
+        latest_security = SecurityData.query.order_by(SecurityData.timestamp.desc()).first()
+    except Exception as e:
+        app.logger.error(f"Error querying security_data: {e}")
+        latest_security = None
+
+    return render_template('index.html',
                            live_temp=live_temp,
                            live_humid=live_humid,
                            live_pressure=live_pressure,
@@ -211,9 +220,12 @@ def trigger_camera():
 
 @app.route('/create_db')
 def create_db():
-    with app.app_context():
-        db.create_all()
-    return "Database tables created!"
+    try:
+        with app.app_context():
+            db.create_all()
+        return "Database tables created successfully!"
+    except Exception as e:
+        return f"Error creating tables: {str(e)}", 500
 
 
 if __name__ == '__main__':
