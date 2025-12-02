@@ -49,9 +49,9 @@
 <script>
     document.getElementById('securityDate').valueAsDate = new Date();
 
-    function convertUTCToLocal(utcDateString) {
+    function convertUTCToEastern(utcDateString) {
         const utcDate = new Date(utcDateString);
-        return utcDate;
+        return new Date(utcDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
     }
 
     function setMode(mode) {
@@ -64,7 +64,7 @@
         .then(data => {
             if (data.success) {
                 alert(`System mode changed to: ${mode}`);
-                location.reload();
+                location. reload();
             } else {
                 alert('Failed to change mode');
             }
@@ -122,19 +122,20 @@
             return;
         }
 
-        let html = '<table><thead><tr><th>Time (Local)</th><th>Motion</th><th>Smoke</th><th>Sound</th><th>Total Events</th></tr></thead><tbody>';
+        let html = '<table><thead><tr><th>Time (Eastern)</th><th>Motion</th><th>Smoke</th><th>Sound</th><th>Total Events</th></tr></thead><tbody>';
 
         intrusions.forEach(intrusion => {
-            const localDate = convertUTCToLocal(intrusion. timestamp);
-            const timeString = localDate.toLocaleString('en-US', {
-                month: 'numeric',
-                day: 'numeric',
-                year: 'numeric',
-                hour: 'numeric',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
+            const easternDate = convertUTCToEastern(intrusion.timestamp);
+            const month = easternDate.getMonth() + 1;
+            const day = easternDate.getDate();
+            const year = easternDate.getFullYear();
+            const hours = easternDate.getHours();
+            const minutes = easternDate. getMinutes().toString().padStart(2, '0');
+            const seconds = easternDate.getSeconds().toString().padStart(2, '0');
+            const ampm = hours >= 12 ?  'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+
+            const timeString = `${month}/${day}/${year}, ${displayHours}:${minutes}:${seconds} ${ampm}`;
 
             const total = intrusion.motion_count + intrusion.smoke_count + intrusion.sound_count;
             html += `<tr>

@@ -104,7 +104,7 @@ def control():
     fan_status = get_live_data('fan-control')
     buzzer_status = get_live_data('buzzer-control')
 
-    return render_template('control. html',
+    return render_template('control.html',
                            light_status=light_status,
                            fan_status=fan_status,
                            buzzer_status=buzzer_status)
