@@ -2,33 +2,394 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IoT Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DomiSafe Dashboard</title>
+    <script src="https://cdn.jsdelivr. net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .sensor-value {
+            font-size: 2. 5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .sensor-label {
+            color: #666;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control-button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1. 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .control-button. on {
+            background: #48bb78;
+            color: white;
+        }
+
+        .control-button.off {
+            background: #f56565;
+            color: white;
+        }
+
+        . control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0. 3);
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .mode-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #e2e8f0;
+            color: #333;
+        }
+
+        .mode-button. active {
+            background: #667eea;
+            color: white;
+        }
+
+        .mode-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .camera-button {
+            width: 100%;
+            padding: 20px;
+            background: #ed8936;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0. 3s ease;
+        }
+
+        .camera-button:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+
+        . chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .chart-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.on {
+            background: #48bb78;
+        }
+
+        .status-indicator.off {
+            background: #f56565;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+    </style>
 </head>
 <body>
-    <h1>System Dashboard</h1>
+    <div class="container">
+        <h1>🏠 DomiSafe IoT Dashboard</h1>
 
-    <h2>Live Data from Adafruit IO</h2>
-    <p>Temperature: {{ live_temp }}</p>
-    <p>Humidity: {{ live_humid }}</p>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>🌡️ Temperature</h2>
+                <div class="sensor-value">{{ live_temp }}°C</div>
+                <div class="sensor-label">Current Reading</div>
+            </div>
 
-    <h2>Historical Data from Database</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Feed</th>
-                <th>Value</th>
-                <th>Timestamp</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for data in historical_data %}
-            <tr>
-                <td>{{ data.feed_name }}</td>
-                <td>{{ data.value }}</td>
-                <td>{{ data.timestamp }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <div class="card">
+                <h2>💧 Humidity</h2>
+                <div class="sensor-value">{{ live_humid }}%</div>
+                <div class="sensor-label">Current Reading</div>
+            </div>
+
+            <div class="card">
+                <h2>🌀 Pressure</h2>
+                <div class="sensor-value">{{ live_pressure }} hPa</div>
+                <div class="sensor-label">Current Reading</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>💡 Light Control</h2>
+                <button class="control-button {{ 'on' if light_status == '1' or light_status == 'ON' else 'off' }}"
+                        onclick="toggleDevice('light', this)">
+                    <span class="status-indicator {{ 'on' if light_status == '1' or light_status == 'ON' else 'off' }}"></span>
+                    {{ 'ON' if light_status == '1' or light_status == 'ON' else 'OFF' }}
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>🌀 Fan Control</h2>
+                <button class="control-button {{ 'on' if fan_status == '1' or fan_status == 'ON' else 'off' }}"
+                        onclick="toggleDevice('fan', this)">
+                    <span class="status-indicator {{ 'on' if fan_status == '1' or fan_status == 'ON' else 'off' }}"></span>
+                    {{ 'ON' if fan_status == '1' or fan_status == 'ON' else 'OFF' }}
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>🔔 Buzzer Control</h2>
+                <button class="control-button {{ 'on' if buzzer_status == '1' or buzzer_status == 'ON' else 'off' }}"
+                        onclick="toggleDevice('buzzer', this)">
+                    <span class="status-indicator {{ 'on' if buzzer_status == '1' or buzzer_status == 'ON' else 'off' }}"></span>
+                    {{ 'ON' if buzzer_status == '1' or buzzer_status == 'ON' else 'OFF' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>🏡 System Mode</h2>
+                <div class="mode-selector">
+                    <button class="mode-button {{ 'active' if system_mode == 'Home' else '' }}"
+                            onclick="setMode('Home', this)">
+                        Home
+                    </button>
+                    <button class="mode-button {{ 'active' if system_mode == 'Away' else '' }}"
+                            onclick="setMode('Away', this)">
+                        Away
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📸 Camera Control</h2>
+                <button class="camera-button" onclick="triggerCamera()">
+                    Take Photo
+                </button>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2>📊 Environmental Data (Last 24 Hours)</h2>
+            <canvas id="envChart"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>📋 Recent Environmental Data</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>Pressure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in recent_env %}
+                    <tr>
+                        <td>{{ data.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ data.temperature }}°C</td>
+                        <td>{{ data.humidity }}%</td>
+                        <td>{{ data.pressure }} hPa</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function toggleDevice(device, button) {
+            const isOn = button.classList.contains('on');
+            const command = isOn ? 'OFF' : 'ON';
+
+            fetch(`/api/control/${device}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON. stringify({command: command})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.classList.toggle('on');
+                    button.classList.toggle('off');
+                    button.innerHTML = `<span class="status-indicator ${command. toLowerCase()}"></span>${command}`;
+                }
+            });
+        }
+
+        function setMode(mode, button) {
+            fetch('/api/mode', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({mode: mode})
+            })
+            .then(response => response.json())
+            . then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.mode-button'). forEach(btn => btn.classList. remove('active'));
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        function triggerCamera() {
+            fetch('/api/camera/trigger', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Camera triggered!  Check your email for the photo.');
+                }
+            });
+        }
+
+        fetch('/api/chart/environmental')
+            .then(response => response. json())
+            .then(data => {
+                const ctx = document.getElementById('envChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.timestamps. map(t => new Date(t).toLocaleString()),
+                        datasets: [
+                            {
+                                label: 'Temperature (°C)',
+                                data: data.temperature,
+                                borderColor: 'rgb(255, 99, 132)',
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Humidity (%)',
+                                data: data. humidity,
+                                borderColor: 'rgb(54, 162, 235)',
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Pressure (hPa)',
+                                data: data.pressure,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true
+                    }
+                });
+            });
+
+        setInterval(() => location.reload(), 60000);
+    </script>
 </body>
 </html>
