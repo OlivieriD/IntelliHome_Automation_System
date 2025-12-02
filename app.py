@@ -42,11 +42,7 @@ def get_live_data(feed_name):
     try:
         data = aio.receive(feed_name)
         return data.value
-    except errors.RequestError:
-        return 'N/A'
-    except errors.AdafruitIOError:
-        return 'N/A'
-    except Exception:
+    except:
         return 'N/A'
 
 
@@ -54,7 +50,7 @@ def publish_to_feed(feed_name, value):
     try:
         aio.send_data(feed_name, value)
         return True
-    except errors.AdafruitIOError as e:
+    except Exception as e:
         app.logger.error(f"Failed to publish to {feed_name}: {e}")
         return False
 
@@ -64,19 +60,16 @@ def index():
     live_temp = get_live_data('temperature-feed')
     live_humid = get_live_data('humidity-feed')
     live_pressure = get_live_data('pressure-feed')
-
     system_mode = get_live_data('system-mode')
 
     try:
         latest_env = EnvData.query.order_by(EnvData.timestamp.desc()).first()
-    except Exception as e:
-        app.logger.error(f"Error querying env_data: {e}")
+    except:
         latest_env = None
 
     try:
         latest_security = SecurityData.query.order_by(SecurityData.timestamp.desc()).first()
-    except Exception as e:
-        app.logger.error(f"Error querying security_data: {e}")
+    except:
         latest_security = None
 
     return render_template('index.html',
