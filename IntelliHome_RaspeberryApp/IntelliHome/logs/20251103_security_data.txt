@@ -1,0 +1,8 @@
+{"timestamp": "2025-11-03T21:56:23.973225", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_215620.jpg"}
+{"timestamp": "2025-11-03T21:56:35.182239", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_215631.jpg"}
+{"timestamp": "2025-11-03T22:11:32.163472", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221130.jpg"}
+{"timestamp": "2025-11-03T22:11:43.310487", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221141.jpg"}
+{"timestamp": "2025-11-03T22:17:39.864947", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221736.jpg"}
+{"timestamp": "2025-11-03T22:17:50.394288", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221746.jpg"}
+{"timestamp": "2025-11-03T22:18:17.611070", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221815.jpg"}
+{"timestamp": "2025-11-03T22:18:29.493083", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251103_221826.jpg"}

@@ -1,0 +1,4 @@
+{"timestamp": "2025-12-01T22:47:41.924256", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251201_224738.jpg"}
+{"timestamp": "2025-12-01T23:49:38.969839", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251201_234935.jpg"}
+{"timestamp": "2025-12-01T23:50:07.636248", "motion_detected": false, "smoke_detected": true, "sound_detected": false, "image_path": null}
+{"timestamp": "2025-12-01T23:53:17.366731", "motion_detected": false, "smoke_detected": true, "sound_detected": false, "image_path": null}

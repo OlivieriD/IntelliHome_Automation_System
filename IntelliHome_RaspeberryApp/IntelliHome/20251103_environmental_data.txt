@@ -1,0 +1,5 @@
+{"timestamp": "2025-11-03T21:08:47.823677", "temperature": 20.0, "humidity": 56, "pressure": 1011.41}
+{"timestamp": "2025-11-03T21:22:09.828750", "temperature": 20.0, "humidity": 56, "pressure": 1016.79}
+{"timestamp": "2025-11-03T21:35:22.015889", "temperature": 20.1, "humidity": 55, "pressure": 1018.24}
+{"timestamp": "2025-11-03T21:39:48.003903", "temperature": 20.3, "humidity": 55, "pressure": 1014.03}
+{"timestamp": "2025-11-03T21:43:50.182056", "temperature": 20.5, "humidity": 54, "pressure": 1013.87}

@@ -1,0 +1,13 @@
+{"timestamp": "2025-12-01T22:42:30.727523", "temperature": 20.4, "humidity": 37, "pressure": 1009.09}
+{"timestamp": "2025-12-01T22:45:03.531923", "temperature": 20.4, "humidity": 37, "pressure": 1014.65}
+{"timestamp": "2025-12-01T22:51:04.402748", "temperature": 20.4, "humidity": 37.3, "pressure": 1014.65}
+{"timestamp": "2025-12-01T22:57:05.339039", "temperature": 20.6, "humidity": 37, "pressure": 1009.24}
+{"timestamp": "2025-12-01T23:03:06.275416", "temperature": 20.6, "humidity": 36.8, "pressure": 1009.24}
+{"timestamp": "2025-12-01T23:26:33.096473", "temperature": 24.9, "humidity": 50.1, "pressure": 1013.25}
+{"timestamp": "2025-12-01T23:32:34.047162", "temperature": 20.9, "humidity": 38, "pressure": 1008.86}
+{"timestamp": "2025-12-01T23:38:34.997374", "temperature": 20.9, "humidity": 39, "pressure": 1015.32}
+{"timestamp": "2025-12-01T23:44:35.935364", "temperature": 20.9, "humidity": 39, "pressure": 1015.79}
+{"timestamp": "2025-12-01T23:47:45.666132", "temperature": 20.9, "humidity": 40, "pressure": 1015.05}
+{"timestamp": "2025-12-01T23:53:45.758731", "temperature": 20.9, "humidity": 40, "pressure": 1017.89}
+{"timestamp": "2025-12-01T23:59:46.712242", "temperature": 20.9, "humidity": 40.0, "pressure": 1017.89}
+{"timestamp": "2025-12-02T00:05:47.669667", "temperature": 20.8, "humidity": 40.3, "pressure": 1017.89}

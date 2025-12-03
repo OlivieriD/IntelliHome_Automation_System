@@ -1,0 +1,2 @@
+{"timestamp": "2025-11-04T15:36:18.755653", "temperature": 22.1, "humidity": 44, "pressure": 1016.56}
+{"timestamp": "2025-11-04T15:38:33.183222", "temperature": 22.1, "humidity": 44, "pressure": 1010.68}

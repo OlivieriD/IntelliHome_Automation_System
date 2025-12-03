@@ -1,0 +1,6 @@
+{"timestamp": "2025-11-03T21:55:45.395930", "temperature": 25.0, "humidity": 50.3, "pressure": 1013.25}
+{"timestamp": "2025-11-03T21:57:34.563023", "temperature": 24.9, "humidity": 50.1, "pressure": 1013.25}
+{"timestamp": "2025-11-03T22:09:45.842712", "temperature": 20.9, "humidity": 52, "pressure": 1013.24}
+{"timestamp": "2025-11-03T22:10:41.051617", "temperature": 20.9, "humidity": 52, "pressure": 1008.55}
+{"timestamp": "2025-11-03T22:15:10.425026", "temperature": 21.0, "humidity": 52, "pressure": 1014.53}
+{"timestamp": "2025-11-03T22:19:47.368320", "temperature": 24.9, "humidity": 49.9, "pressure": 1013.25}

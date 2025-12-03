@@ -1,0 +1,2 @@
+{"timestamp": "2025-10-31T15:41:48.272878", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/motion_20251031_154148_NOCAM.txt"}
+{"timestamp": "2025-10-31T17:31:49.519752", "motion_detected": true, "smoke_detected": false, "sound_detected": false, "image_path": "captured_images/security_20251031_173146.jpg"}
